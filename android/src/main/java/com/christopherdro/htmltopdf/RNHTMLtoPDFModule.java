@@ -37,9 +37,9 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
 
       String fileName;
       if (options.hasKey("fileName")) {
-        fileName = options.getString("fileName");
+        fileName = options.getString("fileName") + ".pdf";
       } else {
-        fileName = UUID.randomUUID().toString();
+        fileName = "PDF_" + UUID.randomUUID().toString() + ".pdf";
       }
 
       if (options.hasKey("directory") && options.getString("directory").equals("docs")) {
@@ -49,9 +49,9 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
                   : new File(mReactContext.getFilesDir(), Environment.DIRECTORY_DOCUMENTS);
 
         if (!path.exists()) path.mkdir();
-        destinationFile = new File(path, fileName + ".pdf");
+        destinationFile = new File(path, fileName);
       } else {
-        destinationFile = getTempFile(fileName);
+        destinationFile = new File(getReactApplicationContext().getCacheDir(), fileName);
       }
 
       convertToPDF(
@@ -77,18 +77,6 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
                 resultMap,
                 promise
               );
-    } catch (Exception e) {
-      throw new Exception(e);
-    }
-  }
-
-  private File getTempFile(String fileName) throws Exception {
-    try {
-      File outputDir = getReactApplicationContext().getCacheDir();
-      File outputFile = File.createTempFile("PDF_" + UUID.randomUUID().toString(), ".pdf", outputDir);
-
-      return outputFile;
-
     } catch (Exception e) {
       throw new Exception(e);
     }
