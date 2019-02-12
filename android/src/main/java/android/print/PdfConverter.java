@@ -33,7 +33,7 @@ public class PdfConverter implements Runnable {
     private static PdfConverter sInstance;
 
     private Context mContext;
-    private String mHtmlString;
+    private String mHtmlStringBase64;
     private File mPdfFile;
     private PrintAttributes mPdfPrintAttrs;
     private boolean mIsCurrentlyConverting;
@@ -85,7 +85,7 @@ public class PdfConverter implements Runnable {
                 }
             }
         });
-        mWebView.loadData(mHtmlString, "text/HTML", "UTF-8");
+        mWebView.loadData(mHtmlStringBase64, "text/HTML", "base64");
     }
 
     public PrintAttributes getPdfPrintAttrs() {
@@ -108,7 +108,7 @@ public class PdfConverter implements Runnable {
             return;
 
         mContext = context;
-        mHtmlString = htmlString;
+        mHtmlStringBase64 = Base64.encodeToString(htmlString.getBytes(), Base64.NO_PADDING);
         mPdfFile = file;
         mIsCurrentlyConverting = true;
         mShouldEncode = shouldEncode;
@@ -145,7 +145,7 @@ public class PdfConverter implements Runnable {
 
     private void destroy() {
         mContext = null;
-        mHtmlString = null;
+        mHtmlStringBase64 = null;
         mPdfFile = null;
         mPdfPrintAttrs = null;
         mIsCurrentlyConverting = false;
